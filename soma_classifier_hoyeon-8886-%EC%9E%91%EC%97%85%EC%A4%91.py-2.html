@@ -1,0 +1,187 @@
+
+# coding: utf-8
+
+# In[1]:
+
+import pandas as pd
+import nltk
+import re
+from konlpy.tag import Twitter
+
+#train_df = pd.read_pickle("soma_goods_train.df")
+#train_df.shape
+
+twitter = Twitter()
+
+
+# In[ ]:
+
+for i in range(0,10000):
+    r1 = re.compile("(\d{1}/|최대|)(\d{2}|\d{1})만원( |)(최대|적립|이상| |)(↑| |)(구매고객|구매시|무료배송 및 사은품| |)( |)(최대|적립|이상| |)(\d{1}개|(.*)증정| |)((.*)증정| |)")
+    train_df.iloc[i]['name']=r1.sub(" ",train_df.iloc[i]['name'])
+ 
+    r2 = re.compile("(시중가|기존가|정상가|최초가|)(:|)(\d{7}|\d{6}|\d{5}|((\d{3}|\d{2})( |,|)\d{3})|\d{4}|\d{3}|\d{2}|\d{1})원")
+    train_df.iloc[i]['name']=r2.sub(" ",train_df.iloc[i]['name'])
+    
+    r3 = re.compile("(AK플라자|AK PLAZA|AK몰|AK유아동|AKMALL|_AK|AK수원점)")
+    train_df.iloc[i]['name']=r3.sub(" ",train_df.iloc[i]['name'])
+ 
+    r4 = re.compile("(\D{2}|)( |)백화점( |)((.*)관|)")
+    train_df.iloc[i]['name']=r4.sub(" ",train_df.iloc[i]['name'])
+   
+    r5 = re.compile("(\d{2}|\d{1}|)(균일가|진열|시즌|%|)(마지막|한정|파격|특가|A|대박|)(%| |)세일(할인|)")
+    train_df.iloc[i]['name']=r5.sub(" ",train_df.iloc[i]['name'])
+ 
+    r6 = re.compile("(\d{2}.|)(\d{3}|\d{2}|\d{1})%( |)(즉시할인|할인|OFF|Sale|sale|)(쿠폰|)(~|)((.*)일까지|)")
+    train_df.iloc[i]['name']=r6.sub(" ",train_df.iloc[i]['name'])
+
+    r7 = re.compile("카드(\D{3,5})(\d{2}|\d{1})\/(\d{2}|\d{1})(\~|)((\d{2}|\d{1})\/(\d{2}|\d{1})|)")
+    train_df.iloc[i]['name']=r7.sub("카드",train_df.iloc[i]['name'])
+    
+    r8 = re.compile("(\.\.\.\.|\.\.\.|\.\.| : | :|: |::|\((I|C|M|F|E|주)\))")
+    train_df.iloc[i]['name']=r8.sub(" ",train_df.iloc[i]['name'])
+    
+    r9 = re.compile("(정성으로|유선문의|부드럽게|)( |)(작동됩|안됩|됩|팝|판매합|배송하겠습| 배송합|합|부탁드립|드립|바랍|다하겠습|입|)니다(\.|\!|)")
+    train_df.iloc[i]['name']=r9.sub(" ",train_df.iloc[i]['name'])
+    
+    r10 = re.compile("(이|)( |)(가격이|샵이|고객만족을위해|)( |)최선(이다|입니다|을|)( |)(다하겠습니다|)")
+    train_df.iloc[i]['name']=r10.sub(" ",train_df.iloc[i]['name'])
+    
+    """
+    'Free Shipping','Free shipping','Freeshipping',"new ","NEW ","New ",
+    \b [MB|TB|KB|GHz|mhz]\b
+    """
+
+    brand=["Satechi","Logitech","INTEL","Intel","IBM","HP","Shure","Dell"]
+    
+    for word in brand :
+        train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace(word, " "+word+" ")    
+
+
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace('_', " ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace('.', "_")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace('A/S', "AS")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace('PS/2', "PS2")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace(':', "_")
+    
+train_df.to_pickle("soma_goods_train_reg.df")
+
+
+# In[2]:
+
+
+train_df=pd.read_pickle("soma_goods_train_reg.df")
+for i in range(0,10000):
+    useless_word = ["신한카드","현대카드","삼성카드","KB국민카드","KB카드","국민카드","BC카드","우리카드","롯데카드","하나카드",
+                    "구.하나SK",
+                    "비씨카드","씨티카드",
+                    "방문수령가능","즉시할인쿠폰","빠름배송","노마진","행사","모든구매","전구매","신제품","새제품","신속","정확","출고",
+                    "현대H몰","CJmal","롯데i몰","이마트몰","롯데닷컴","신세계몰","11번가","위메프","GS샵","G마켓","쿠팡","옥션","티몬",
+                    "관부가세","부가세","총알","출고",
+                    "계산서","계산","미포함","포함","상당","응모","불가","한정","수량","무조건","오케이","빠른","추천",
+                    "연중무휴","적립금","할인", "즉시","수량","한정","단골","우대","최대","추가","적립",
+                    "발행", "세금","단독", "특가", "구매", "대행","선착순" ,"사은품", "이벤트", "증정", "직배송", 
+                    "배송","발송","착한","가격", "쿠폰", "1주년", "판매점", "무료", "당일",
+                    "Ⅷ관","VII관","Ⅶ관","III관","Ⅲ관","VI관","IV관","Ⅱ관","Ⅸ관","Ⅰ관","V관",
+                    "최저가", "최고가", "저가", "고가", "기존가"]
+    special_char = ["&#39;","&frasl;","&amp;","&gt;","&quot;","col:","ㅁ","ㅇ","ㅣ",
+                    ':','@','▶',"!",'|','┕','Λ','Ο','Λ','◆','正','本','♥','●','※',
+                    '◀','┙','★','☆','*','名','品','大','＋','+','■','♣','━',
+                    'ㄴ','ㄱ','┏','┓','╋','?','▩','無','有','{','}','[',']','(',')']
+    
+    """
+    " x "," X ",',','/'
+    """
+    
+    for word in useless_word :
+        train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace(word, "")
+    
+    for word in special_char :
+        train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace(word, " ")
+    
+
+
+# In[3]:
+
+#train_df.to_pickle("soma_goods_train_reg.df")
+
+
+# In[4]:
+
+def tagging(result):
+    for idx,data in enumerate(result):
+        if len(data)==1:
+            #if not data.isnumeric():
+            result[idx]=data+"_"
+        
+    return " ".join(result)
+
+
+# In[5]:
+
+#percent = re.compile('[_0-9a-zA-Z]+')
+
+for i in range(0,10000):
+    twitterPosList = twitter.pos(train_df.iloc[i]['name'])
+    a=[]
+    for q in twitterPosList:
+        a.append(q[0])
+    #q
+    train_df.iloc[i]['name']+=tagging(a)
+    
+    
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("__"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("-_"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("&_"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("=_"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("$_"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("^_"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("#_"," ")
+    train_df.iloc[i]['name']=train_df.iloc[i]['name'].replace("\_"," ")
+
+
+# In[6]:
+
+from sklearn.feature_extraction.text import CountVectorizer
+vectorizer = CountVectorizer()
+#형태소 분석데이터
+d_list = []
+cate_list = []
+for each in train_df.iterrows():
+    cate = ";".join([each[1]['cate1'],each[1]['cate2'],each[1]['cate3']])
+    d_list.append("".join(each[1]['name']))
+    cate_list.append(cate)
+    
+    
+cate_dict = dict(zip(list(set(cate_list)),range(len(set(cate_list)))))
+
+y_list = []
+for each in train_df.iterrows():
+    cate = ";".join([each[1]['cate1'],each[1]['cate2'],each[1]['cate3']])
+    y_list.append(cate_dict[cate])
+    
+x_list = vectorizer.fit_transform(d_list)
+
+from sklearn.svm import LinearSVC
+from sklearn.grid_search import GridSearchCV
+import numpy as np
+
+svc_param = {'C':np.logspace(-2,0,20)}
+gs_svc = GridSearchCV(LinearSVC(loss='l2'),svc_param,cv=5,n_jobs=-1)
+gs_svc.fit(x_list, y_list)
+
+clf = LinearSVC(C=gs_svc.best_params_['C'])
+
+clf.fit(x_list,y_list)
+
+from sklearn.externals import joblib
+
+joblib.dump(clf,'classify_8886j.model',compress=3)
+joblib.dump(cate_dict,'cate_dict_8886j.dat',compress=3)
+joblib.dump(vectorizer,'vectorizer_8886j.dat',compress=3)
+
+
+# In[ ]:
+
+
+
