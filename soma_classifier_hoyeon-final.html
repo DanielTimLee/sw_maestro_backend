@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>soma_classifier_hoyeon-8886-작업중</title>
+<title>soma_classifier_hoyeon-final</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11746,9 +11746,269 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="SW&#47560;&#50640;&#49828;&#53944;&#47196;-&#48177;&#50644;&#46300;-&#44284;&#51228;-[&#51060;&#54840;&#50672;]">SW&#47560;&#50640;&#49828;&#53944;&#47196; &#48177;&#50644;&#46300; &#44284;&#51228; [&#51060;&#54840;&#50672;]<a class="anchor-link" href="#SW&#47560;&#50640;&#49828;&#53944;&#47196;-&#48177;&#50644;&#46300;-&#44284;&#51228;-[&#51060;&#54840;&#50672;]">&#182;</a></h1><h3 id="&#44284;&#51228;-&#54168;&#51060;&#51648;-(110.35.161.182:8888)"><a href="http://110.35.161.182:8888">&#44284;&#51228; &#54168;&#51060;&#51648; (110.35.161.182:8888)</a><a class="anchor-link" href="#&#44284;&#51228;-&#54168;&#51060;&#51648;-(110.35.161.182:8888)">&#182;</a></h3><p><strong>전체적인 과제에 대한 설명은 다음과 같습니다.</strong></p>
+<ol>
+<li>Vectorize에 대한 이해</li>
+<li>형태소 분석</li>
+<li>Stop Word</li>
+<li>태깅</li>
+<li>이미지 처리</li>
+<li>다른 모델 활용안</li>
+</ol>
+<h1 id="!!!-&#44284;&#51228;-&#49548;&#49828;&#53076;&#46300;&#45716;-&#51228;&#51068;-&#50500;&#47000;&#50640;-&#51080;&#49845;&#45768;&#45796;-!!!">!!! &#44284;&#51228; &#49548;&#49828;&#53076;&#46300;&#45716; &#51228;&#51068; &#50500;&#47000;&#50640; &#51080;&#49845;&#45768;&#45796; !!!<a class="anchor-link" href="#!!!-&#44284;&#51228;-&#49548;&#49828;&#53076;&#46300;&#45716;-&#51228;&#51068;-&#50500;&#47000;&#50640;-&#51080;&#49845;&#45768;&#45796;-!!!">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Vectorize&#50640;-&#45824;&#54620;-&#51060;&#54644;">1. Vectorize&#50640; &#45824;&#54620; &#51060;&#54644;<a class="anchor-link" href="#1.-Vectorize&#50640;-&#45824;&#54620;-&#51060;&#54644;">&#182;</a></h2><h3 id="Vectorize-&#46976;?">Vectorize &#46976;?<a class="anchor-link" href="#Vectorize-&#46976;?">&#182;</a></h3><p>학습할 데이터에 있는 모든 글자를 단어 단위로 잘라 한 단어를 <code>(0,27390)</code>와 같은 형태의 벡터 차원으로 나타내는 과정을 말합니다.</p>
+<p>SVM 모델에서는 이 모든 데이터를 벡터화 시키고,
+각 카테고리(108개)가 가진 벡터들의 특징들을 기준으로 각각의 차원을 분리하고 이를 이용합니다.</p>
+<p>이번 과제에 있어서 성적 향상에 중요하게 보았던 점은 Vectorize가 어떤식으로 작동하는지 입니다.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">vec</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="nb">str</span><span class="p">])</span>
+    <span class="k">print</span> <span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="n">vec</span><span class="p">(</span><span class="s2">&quot;a.cat@굴:국밥/1 23%4_&quot;</span><span class="p">)</span>
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    <span class="mi">1</span>
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    <span class="mi">1</span>
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>    <span class="mi">1</span>
+  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>    <span class="mi">1</span>
+</pre></div>
+<p>다음과 같이 <code>.</code>,<code>@</code>,<code>/</code>,<code>%</code>,<code>-</code> 등 대부분의 특수문자의 경우에는 그냥 공백(whitespace)와 동일하게 인식하고 지나가 버리는 경향이 있었습니다.</p>
+<h5 id="&#46385;--&#54620;&#44060;-_(&#50616;&#45908;&#48148;)-&#54620;&#44060;-&#48764;&#44256;&#45716;">&#46385;  &#54620;&#44060; <code>_</code>(&#50616;&#45908;&#48148;) &#54620;&#44060; &#48764;&#44256;&#45716;<a class="anchor-link" href="#&#46385;--&#54620;&#44060;-_(&#50616;&#45908;&#48148;)-&#54620;&#44060;-&#48764;&#44256;&#45716;">&#182;</a></h5><p>거의 모든 특수문자가 글자로 인식되지 않고 띄어쓰기로 취급되었습니다.</p>
+<h3 id="&#44544;&#51088;-&#51088;&#47476;&#44592;">&#44544;&#51088; &#51088;&#47476;&#44592;<a class="anchor-link" href="#&#44544;&#51088;-&#51088;&#47476;&#44592;">&#182;</a></h3><p>Vectorize에 대한 분석을 하기 전에는 데이터 중 <code>[인텔][인텔]i7-4770k</code> 이라는 데이터에 대해서 <code>[</code>,<code>]</code>,<code>-</code> 문자 등이 글자로 취급이 되어서 저 데이터는 벡터화 될 때에 '인텔엔텔i7-4770k' 라는 하나의 데이터로 인식이 될 꺼라 생각했습니다.</p>
+<p>그러나 벡터화 될 때는 특수문자는 알아서 제거해 주기 때문에 <code>인텔</code>,<code>인텔</code>,<code>i7</code>,<code>4770k</code>로 분리가 되기 때문에 신경쓰지 않아도 되었습니다.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-&#54805;&#53468;&#49548;-&#48516;&#49437;">2. &#54805;&#53468;&#49548; &#48516;&#49437;<a class="anchor-link" href="#2.-&#54805;&#53468;&#49548;-&#48516;&#49437;">&#182;</a></h2><h3 id="KoNLPy&#51032;-&#53468;&#44536;-&#47784;&#45944;?">KoNLPy&#51032; &#53468;&#44536; &#47784;&#45944;?<a class="anchor-link" href="#KoNLPy&#51032;-&#53468;&#44536;-&#47784;&#45944;?">&#182;</a></h3><p>자연어 처리 패키지인 KoNLPy에는 총 (Kkma, Twitter 등) 5가지의 품사 태깅 클래스가 있습니다.</p>
+<p><strong><a href="http://konlpy.org/ko/v0.4.3/morph/#pos-tagging-with-konlpy">형태소 분석 및 품사 태깅</a></strong></p>
+<p>위의 자료를 참고해 보면 <code>Kkma</code>클래스와 <code>Mecab</code>클래스가 가장 정교하게 잘 잘라주는 클래스입니다.</p>
+<p><code>Kkma</code>나 <code>mecab</code>의 경우가 더 상세히 분석을 잘 해주지만
+너무 상세히 분류를 하게 되어서 한 글자 단위로까지 너무 세부하게 분류하는 경향이 있습니다.</p>
+<p>(단어 한 글자일시 <code>vectorize</code>화 시킬때 단어를 인식 못하고 넘어가는 경우가 있습니다)</p>
+<p>(단어를 너무 세부하게 잘라 의미 없는 단어 단위까지로 쪼개버립니다)</p>
+<p>심지어 저 둘을 사용했을때는 오히려 점수가 떨어지는 현상도 발생했습니다.</p>
+<p>따라서 이보다 조금 더 간단히 분류하는 <code>Twitter 분류 클래스</code>를 이용하였습니다.</p>
+<p><strong><a href="https://docs.google.com/spreadsheets/d/1OGAjUvalBuX-oZvZ_-9tEfYD2gQe7hTGsgUpiiBSXI8/edit#gid=0">각 클래스별 분류 태그</a></strong></p>
+<p>위의 링크를 보면 알 수 있지만 트위터의 경우에는 다른 분류 클래스와는 다르게 <code>동사</code>,<code>명사</code>,<code>형옹사</code>,<code>관형사</code> 등 큼직큼직하게 잘라서 데이터가 너무 파편화 되는 것을 방지할 수 있습니다.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Stop-Word">3. Stop Word<a class="anchor-link" href="#3.-Stop-Word">&#182;</a></h2><h3 id="Stop-Word?">Stop Word?<a class="anchor-link" href="#Stop-Word?">&#182;</a></h3><p>만개의 상품 데이터 중에 상품과 직접적인 연관이 없는 다른 정보들을 의미합니다.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="n">train_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="s2">&quot;soma_goods_train.df&quot;</span><span class="p">)</span>
+<span class="n">train_df</span>
+
+<span class="n">cate1</span>    <span class="n">cate2</span>    <span class="n">cate3</span>    <span class="n">name</span>
+<span class="mi">842695</span>    <span class="err">패션의류</span>    <span class="err">아동의류</span>    <span class="err">한복</span>    <span class="p">[</span><span class="err">신한카드</span> <span class="mi">5</span><span class="o">%</span><span class="err">할인</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">19</span><span class="p">]</span><span class="err">예화</span><span class="o">-</span><span class="err">좋은아이들名品</span> <span class="err">남아</span> <span class="err">아동한복</span> <span class="err">금직배자보라</span> <span class="mf">600.</span><span class="o">..</span>
+<span class="mi">842696</span>    <span class="err">패션의류</span>    <span class="err">아동의류</span>    <span class="err">한복</span>    <span class="p">[</span><span class="err">프렌치캣</span><span class="p">]</span> <span class="p">[</span><span class="mi">2015</span><span class="err">년</span> <span class="err">봄</span> <span class="err">기획상품</span><span class="p">]</span><span class="err">세로</span> <span class="n">ST</span> <span class="err">레깅스</span><span class="p">(</span><span class="n">Q51DKP290</span><span class="p">)</span> <span class="p">[</span><span class="err">갤러리</span><span class="o">...</span>
+<span class="mi">842697</span>    <span class="err">패션의류</span>    <span class="err">아동의류</span>    <span class="err">한복</span>    <span class="p">[</span><span class="n">BC카드5</span><span class="o">%</span><span class="err">할인</span><span class="p">][</span><span class="err">예화</span><span class="n">_좋은아이들</span><span class="p">]</span> <span class="err">名品</span> <span class="err">아동한복</span> <span class="err">남아</span><span class="n">_</span> <span class="mi">4005</span> <span class="err">이산검정</span> <span class="p">(</span><span class="err">배자</span><span class="o">...</span>
+<span class="mi">842698</span>    <span class="err">패션의류</span>    <span class="err">아동의류</span>    <span class="err">한복</span>    <span class="p">[</span><span class="mi">5</span><span class="o">%</span> <span class="err">즉시할인</span><span class="p">]</span> <span class="err">고빅스</span> <span class="err">여성</span> <span class="err">한복</span> <span class="err">소품</span> <span class="err">머리장식</span> <span class="err">주석칠보</span> <span class="err">뒷꽂이</span> <span class="n">NA027</span> <span class="mi">3</span><span class="err">개</span>
+<span class="mi">842699</span>    <span class="err">패션의류</span>    <span class="err">아동의류</span>    <span class="err">한복</span>    <span class="p">[</span><span class="err">최저가파워</span><span class="p">]</span> <span class="err">아동한복</span> <span class="p">[</span><span class="err">예화</span><span class="o">-</span><span class="err">좋은아이들</span><span class="p">]</span> <span class="err">아동한복</span> <span class="err">여아</span> <span class="mi">1078</span> <span class="err">빛이나분홍</span>
+<span class="mi">90988</span>    <span class="err">디지털</span><span class="o">/</span><span class="err">가전</span>    <span class="n">PC부품</span>    <span class="n">CPU</span>    <span class="p">[</span><span class="n">ICODA</span><span class="p">]</span> <span class="p">[</span><span class="err">대리점정품</span><span class="p">]</span><span class="err">인텔</span> <span class="err">제온</span> <span class="n">E5</span><span class="o">-</span><span class="mi">2630</span><span class="n">V3</span> <span class="err">하스웰</span><span class="o">-</span><span class="n">EP</span> <span class="p">(</span><span class="mf">2.4</span><span class="n">GHz</span><span class="o">/...</span>
+<span class="mi">90990</span>    <span class="err">디지털</span><span class="o">/</span><span class="err">가전</span>    <span class="n">PC부품</span>    <span class="n">CPU</span>    <span class="err">인텔</span> <span class="n">intel</span> <span class="err">코어</span><span class="mi">4</span><span class="err">세대</span> <span class="err">하스웰</span> <span class="n">i3</span><span class="o">-</span><span class="mi">4160</span>
+<span class="mi">90997</span>    <span class="err">디지털</span><span class="o">/</span><span class="err">가전</span>    <span class="n">PC부품</span>    <span class="n">CPU</span>    <span class="p">[</span><span class="err">해외</span><span class="p">]</span><span class="n">IntelIntel</span> <span class="n">Pentium</span> <span class="n">Processor</span> <span class="n">G3258</span> <span class="mi">4</span> <span class="n">BX806</span><span class="o">...</span>
+<span class="mi">90998</span>    <span class="err">디지털</span><span class="o">/</span><span class="err">가전</span>    <span class="n">PC부품</span>    <span class="n">CPU</span>    <span class="p">[</span><span class="mi">4</span><span class="o">%</span><span class="err">즉시할인쿠폰</span><span class="p">]</span><span class="err">인텔</span> <span class="err">제온</span> <span class="n">E3</span><span class="o">-</span><span class="mi">1226</span><span class="n">V3</span> <span class="p">(</span><span class="err">하스웰</span><span class="p">)</span> <span class="p">(</span><span class="err">정품</span><span class="p">)</span>
+<span class="mi">90999</span>    <span class="err">디지털</span><span class="o">/</span><span class="err">가전</span>    <span class="n">PC부품</span>    <span class="n">CPU</span>    <span class="p">[</span><span class="err">해외</span><span class="p">]</span><span class="n">IntelIntel</span><span class="err">??</span> <span class="n">Xeon</span><span class="err">??</span> <span class="n">Processor</span> <span class="n">X5570</span> <span class="p">(</span><span class="mi">8</span><span class="n">M</span> <span class="n">Ca</span><span class="o">...</span>
+</pre></div>
+<p>다음과 같이 상품과 직접적인 연관이 없는 <code>5% 할인</code>,<code>BC카드</code>,<code>최저가파워</code>,<code>3/19</code>등 의미 없는 단어가 매우 많은 것을 알 수 있습니다.</p>
+<p>이런 단어들을 한번에 모두 정리해 주기 위해서  <code>정규 표현식 (Regular Expression)</code>,<code>문자열 비교</code> 등을 이용하였습니다.</p>
+<h3 id="&#51221;&#44508;&#54364;&#54788;&#49885;-&#51060;&#50857;">&#51221;&#44508;&#54364;&#54788;&#49885; &#51060;&#50857;<a class="anchor-link" href="#&#51221;&#44508;&#54364;&#54788;&#49885;-&#51060;&#50857;">&#182;</a></h3><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(\d{1}/|최대|)(\d{2}|\d{1})만원( |)(최대|적립|이상| |)(↑| |)(구매고객|구매시|무료배송 및 사은품| |)( |)(최대|적립|이상| |)(\d{1}개|(.*)증정| |)((.*)증정| |)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r1</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r2</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(시중가|기존가|정상가|최초가|)(:|)(\d{7}|\d{6}|\d{5}|((\d{3}|\d{2})( |,|)\d{3})|\d{4}|\d{3}|\d{2}|\d{1})원&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r2</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r3</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(AK플라자|AK PLAZA|AK몰|AK유아동|AKMALL|_AK|AK수원점)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r3</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r4</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(\D{2}|)( |)백화점( |)((.*)관|)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r4</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r5</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(\d{2}|\d{1}|)(균일가|진열|시즌|%|)(마지막|한정|파격|특가|A|대박|)(%| |)세일(할인|)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r5</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r6</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(\d{2}.|)(\d{3}|\d{2}|\d{1})%( |)(즉시할인|할인|OFF|Sale|sale|)(쿠폰|)(~|)((.*)일까지|)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r6</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r7</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;카드(\D{3,5})(\d{2}|\d{1})\/(\d{2}|\d{1})(\~|)((\d{2}|\d{1})\/(\d{2}|\d{1})|)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r7</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;카드&quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r8</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(\.\.\.\.|\.\.\.|\.\.| : | :|: |::|\((I|C|M|F|E|주)\))&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r8</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r9</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(정성으로|유선문의|부드럽게|)( |)(작동됩|안됩|됩|팝|판매합|배송하겠습| 배송합|합|부탁드립|드립|바랍|다하겠습|입|)니다(\.|\!|)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r9</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+<span class="n">r10</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;(이|)( |)(가격이|샵이|고객만족을위해|)( |)최선(이다|입니다|을|)( |)(다하겠습니다|)&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">r10</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+</pre></div>
+<h3 id="&#47928;&#51088;&#50676;-&#48708;&#44368;-&#51060;&#50857;">&#47928;&#51088;&#50676; &#48708;&#44368; &#51060;&#50857;<a class="anchor-link" href="#&#47928;&#51088;&#50676;-&#48708;&#44368;-&#51060;&#50857;">&#182;</a></h3><div class="highlight"><pre><span></span><span class="n">useless_word</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;신한카드&quot;</span><span class="p">,</span><span class="s2">&quot;현대카드&quot;</span><span class="p">,</span><span class="s2">&quot;삼성카드&quot;</span><span class="p">,</span><span class="s2">&quot;KB국민카드&quot;</span><span class="p">,</span><span class="s2">&quot;KB카드&quot;</span><span class="p">,</span><span class="s2">&quot;국민카드&quot;</span><span class="p">,</span><span class="s2">&quot;BC카드&quot;</span><span class="p">,</span><span class="s2">&quot;우리카드&quot;</span><span class="p">,</span><span class="s2">&quot;롯데카드&quot;</span><span class="p">,</span><span class="s2">&quot;하나카드&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;구.하나SK&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;비씨카드&quot;</span><span class="p">,</span><span class="s2">&quot;씨티카드&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;방문수령가능&quot;</span><span class="p">,</span><span class="s2">&quot;즉시할인쿠폰&quot;</span><span class="p">,</span><span class="s2">&quot;빠름배송&quot;</span><span class="p">,</span><span class="s2">&quot;노마진&quot;</span><span class="p">,</span><span class="s2">&quot;행사&quot;</span><span class="p">,</span><span class="s2">&quot;모든구매&quot;</span><span class="p">,</span><span class="s2">&quot;전구매&quot;</span><span class="p">,</span><span class="s2">&quot;신제품&quot;</span><span class="p">,</span><span class="s2">&quot;새제품&quot;</span><span class="p">,</span><span class="s2">&quot;신속&quot;</span><span class="p">,</span><span class="s2">&quot;정확&quot;</span><span class="p">,</span><span class="s2">&quot;출고&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;현대H몰&quot;</span><span class="p">,</span><span class="s2">&quot;CJmal&quot;</span><span class="p">,</span><span class="s2">&quot;롯데i몰&quot;</span><span class="p">,</span><span class="s2">&quot;이마트몰&quot;</span><span class="p">,</span><span class="s2">&quot;롯데닷컴&quot;</span><span class="p">,</span><span class="s2">&quot;신세계몰&quot;</span><span class="p">,</span><span class="s2">&quot;11번가&quot;</span><span class="p">,</span><span class="s2">&quot;위메프&quot;</span><span class="p">,</span><span class="s2">&quot;GS샵&quot;</span><span class="p">,</span><span class="s2">&quot;G마켓&quot;</span><span class="p">,</span><span class="s2">&quot;쿠팡&quot;</span><span class="p">,</span><span class="s2">&quot;옥션&quot;</span><span class="p">,</span><span class="s2">&quot;티몬&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;관부가세&quot;</span><span class="p">,</span><span class="s2">&quot;부가세&quot;</span><span class="p">,</span><span class="s2">&quot;총알&quot;</span><span class="p">,</span><span class="s2">&quot;출고&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;계산서&quot;</span><span class="p">,</span><span class="s2">&quot;계산&quot;</span><span class="p">,</span><span class="s2">&quot;미포함&quot;</span><span class="p">,</span><span class="s2">&quot;포함&quot;</span><span class="p">,</span><span class="s2">&quot;상당&quot;</span><span class="p">,</span><span class="s2">&quot;응모&quot;</span><span class="p">,</span><span class="s2">&quot;불가&quot;</span><span class="p">,</span><span class="s2">&quot;한정&quot;</span><span class="p">,</span><span class="s2">&quot;수량&quot;</span><span class="p">,</span><span class="s2">&quot;무조건&quot;</span><span class="p">,</span><span class="s2">&quot;오케이&quot;</span><span class="p">,</span><span class="s2">&quot;빠른&quot;</span><span class="p">,</span><span class="s2">&quot;추천&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;연중무휴&quot;</span><span class="p">,</span><span class="s2">&quot;적립금&quot;</span><span class="p">,</span><span class="s2">&quot;할인&quot;</span><span class="p">,</span> <span class="s2">&quot;즉시&quot;</span><span class="p">,</span><span class="s2">&quot;수량&quot;</span><span class="p">,</span><span class="s2">&quot;한정&quot;</span><span class="p">,</span><span class="s2">&quot;단골&quot;</span><span class="p">,</span><span class="s2">&quot;우대&quot;</span><span class="p">,</span><span class="s2">&quot;최대&quot;</span><span class="p">,</span><span class="s2">&quot;추가&quot;</span><span class="p">,</span><span class="s2">&quot;적립&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;발행&quot;</span><span class="p">,</span> <span class="s2">&quot;세금&quot;</span><span class="p">,</span><span class="s2">&quot;단독&quot;</span><span class="p">,</span> <span class="s2">&quot;특가&quot;</span><span class="p">,</span> <span class="s2">&quot;구매&quot;</span><span class="p">,</span> <span class="s2">&quot;대행&quot;</span><span class="p">,</span><span class="s2">&quot;선착순&quot;</span> <span class="p">,</span><span class="s2">&quot;사은품&quot;</span><span class="p">,</span> <span class="s2">&quot;이벤트&quot;</span><span class="p">,</span> <span class="s2">&quot;증정&quot;</span><span class="p">,</span> <span class="s2">&quot;직배송&quot;</span><span class="p">,</span> 
+                <span class="s2">&quot;배송&quot;</span><span class="p">,</span><span class="s2">&quot;발송&quot;</span><span class="p">,</span><span class="s2">&quot;착한&quot;</span><span class="p">,</span><span class="s2">&quot;가격&quot;</span><span class="p">,</span> <span class="s2">&quot;쿠폰&quot;</span><span class="p">,</span> <span class="s2">&quot;1주년&quot;</span><span class="p">,</span> <span class="s2">&quot;판매점&quot;</span><span class="p">,</span> <span class="s2">&quot;무료&quot;</span><span class="p">,</span> <span class="s2">&quot;당일&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Ⅷ관&quot;</span><span class="p">,</span><span class="s2">&quot;VII관&quot;</span><span class="p">,</span><span class="s2">&quot;Ⅶ관&quot;</span><span class="p">,</span><span class="s2">&quot;III관&quot;</span><span class="p">,</span><span class="s2">&quot;Ⅲ관&quot;</span><span class="p">,</span><span class="s2">&quot;VI관&quot;</span><span class="p">,</span><span class="s2">&quot;IV관&quot;</span><span class="p">,</span><span class="s2">&quot;Ⅱ관&quot;</span><span class="p">,</span><span class="s2">&quot;Ⅸ관&quot;</span><span class="p">,</span><span class="s2">&quot;Ⅰ관&quot;</span><span class="p">,</span><span class="s2">&quot;V관&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;최저가&quot;</span><span class="p">,</span> <span class="s2">&quot;최고가&quot;</span><span class="p">,</span> <span class="s2">&quot;저가&quot;</span><span class="p">,</span> <span class="s2">&quot;고가&quot;</span><span class="p">,</span> <span class="s2">&quot;기존가&quot;</span><span class="p">]</span>
+<span class="n">special_char</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&amp;#39;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;frasl;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;amp;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&amp;quot;&quot;</span><span class="p">,</span><span class="s2">&quot;col:&quot;</span><span class="p">,</span><span class="s2">&quot;ㅁ&quot;</span><span class="p">,</span><span class="s2">&quot;ㅇ&quot;</span><span class="p">,</span><span class="s2">&quot;ㅣ&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;@&#39;</span><span class="p">,</span><span class="s1">&#39;▶&#39;</span><span class="p">,</span><span class="s2">&quot;!&quot;</span><span class="p">,</span><span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="s1">&#39;┕&#39;</span><span class="p">,</span><span class="s1">&#39;Λ&#39;</span><span class="p">,</span><span class="s1">&#39;Ο&#39;</span><span class="p">,</span><span class="s1">&#39;Λ&#39;</span><span class="p">,</span><span class="s1">&#39;◆&#39;</span><span class="p">,</span><span class="s1">&#39;正&#39;</span><span class="p">,</span><span class="s1">&#39;本&#39;</span><span class="p">,</span><span class="s1">&#39;♥&#39;</span><span class="p">,</span><span class="s1">&#39;●&#39;</span><span class="p">,</span><span class="s1">&#39;※&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;◀&#39;</span><span class="p">,</span><span class="s1">&#39;┙&#39;</span><span class="p">,</span><span class="s1">&#39;★&#39;</span><span class="p">,</span><span class="s1">&#39;☆&#39;</span><span class="p">,</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="s1">&#39;名&#39;</span><span class="p">,</span><span class="s1">&#39;品&#39;</span><span class="p">,</span><span class="s1">&#39;大&#39;</span><span class="p">,</span><span class="s1">&#39;＋&#39;</span><span class="p">,</span><span class="s1">&#39;+&#39;</span><span class="p">,</span><span class="s1">&#39;■&#39;</span><span class="p">,</span><span class="s1">&#39;♣&#39;</span><span class="p">,</span><span class="s1">&#39;━&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ㄴ&#39;</span><span class="p">,</span><span class="s1">&#39;ㄱ&#39;</span><span class="p">,</span><span class="s1">&#39;┏&#39;</span><span class="p">,</span><span class="s1">&#39;┓&#39;</span><span class="p">,</span><span class="s1">&#39;╋&#39;</span><span class="p">,</span><span class="s1">&#39;?&#39;</span><span class="p">,</span><span class="s1">&#39;▩&#39;</span><span class="p">,</span><span class="s1">&#39;無&#39;</span><span class="p">,</span><span class="s1">&#39;有&#39;</span><span class="p">,</span><span class="s1">&#39;{&#39;</span><span class="p">,</span><span class="s1">&#39;}&#39;</span><span class="p">,</span><span class="s1">&#39;[&#39;</span><span class="p">,</span><span class="s1">&#39;]&#39;</span><span class="p">,</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">]</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot; x &quot;,&quot; X &quot;,&#39;,&#39;,&#39;/&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">useless_word</span> <span class="p">:</span>
+    <span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">special_char</span> <span class="p">:</span>
+    <span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">train_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-&#53468;&#44613;-(Tagging)">4. &#53468;&#44613; (Tagging)<a class="anchor-link" href="#4.-&#53468;&#44613;-(Tagging)">&#182;</a></h2><h3 id="&#53468;&#44613;-(Tagging)-?">&#53468;&#44613; (Tagging) ?<a class="anchor-link" href="#&#53468;&#44613;-(Tagging)-?">&#182;</a></h3><p><code>Twitter</code> 등을 이용한 형태소 분석기를 이용하고 나면 숫자나, 한 글자씩 단어가 떨어져 나가는 현상이 발생했습니다.</p>
+<p>이를 가지고 <code>Vectorize</code>를 돌려버리게 된다면 한 글자로 되어있는 단어들은 모두 사라지게 됩니다.</p>
+<p>저는 이 점에 주목해서  한 글자로 떨어진 글자도 분명히 특징을 가지고 있을 것이고,
+이를 모두 잃어버리게 되는 것은 매우 큰 손실이라 생각했습니다.</p>
+<p>그래서 이 한 글자로 되어있는 글자들 뒤에 <code>문자열로 인식되는 태그 (ex) '_'</code> 등을 붙여서 한 글자가 아닌 단어로 만들어 버리게 된다면 이 부분을 해결할 수 있을 것이라 생각했습니다.</p>
+<p>따라서 문자열의 길이를 모두 검사한 후에 뒤에  <code>'_'</code> 와 같은 태그를 붙여주는 과정을 모두 처리해 주었습니다.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tagging</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c1">#if not data.isnumeric():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">=</span><span class="n">data</span><span class="o">+</span><span class="s2">&quot;_&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+<p><strong>단점으로써는 데이터가 이미 너무 많이 파편화되어있기 때문에 태깅을 해도 뚜렷하게 구분되지 않든 데이터가 많습니다.</strong></p>
+<p><strong>ex) '3<em>' (숫자가 그냥 떨어져 나갔습니다.),'용</em>' (남성용, 여성용 할 때의 용만 떨어져 나갔습니다)</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-&#51060;&#48120;&#51648;-&#52376;&#47532;">5. &#51060;&#48120;&#51648; &#52376;&#47532;<a class="anchor-link" href="#5.-&#51060;&#48120;&#51648;-&#52376;&#47532;">&#182;</a></h2><h3 id="&#52852;&#54168;&#47484;-&#54876;&#50857;&#54620;-&#51060;&#48120;&#51648;-&#52376;&#47532;">&#52852;&#54168;&#47484; &#54876;&#50857;&#54620; &#51060;&#48120;&#51648; &#52376;&#47532;<a class="anchor-link" href="#&#52852;&#54168;&#47484;-&#54876;&#50857;&#54620;-&#51060;&#48120;&#51648;-&#52376;&#47532;">&#182;</a></h3><p><code>Caffe</code> 를 활용한 이미지 처리를 위해 만장의 사진을 모두 <code>Caffe</code> 도커 인스턴스 안에서 다운을 받았습니다. (wget)</p>
+<p><code>Caffe</code> 웹 버전에서는 이미지 한 장의 url을 입력받아 한 개의 데이터를 돌려주는 형식인데, 이런 식으로 처리하면 너무 작업이 오래걸려서 <code>Caffe</code> 웹 버전의 서버를 뜯어서 처리를 진행하였습니다.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Queue</span>
+
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="n">images</span> <span class="o">=</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;soma_train/*.jpg&quot;</span><span class="p">)</span>
+<span class="n">File_name</span> <span class="o">=</span> <span class="n">images</span>
+
+
+<span class="k">def</span> <span class="nf">thread</span><span class="p">(</span><span class="n">first</span><span class="p">,</span><span class="n">last</span><span class="p">,</span><span class="n">result</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">first</span><span class="p">,</span><span class="n">last</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fn</span><span class="o">=</span><span class="n">File_name</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;soma_train/&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">caffe</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="n">File_name</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">put</span><span class="p">({</span><span class="n">fn</span><span class="p">:</span><span class="n">app</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">classify_image</span><span class="p">(</span><span class="n">image</span><span class="p">)})</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> error! </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">File_name</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+    <span class="k">return</span>
+<span class="o">------------------------------------------------------------------</span>
+                                    <span class="err">생략</span>
+<span class="o">------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">start_tornado</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">9000</span><span class="p">):</span>
+    <span class="n">http_server</span> <span class="o">=</span> <span class="n">tornado</span><span class="o">.</span><span class="n">httpserver</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">(</span>
+        <span class="n">tornado</span><span class="o">.</span><span class="n">wsgi</span><span class="o">.</span><span class="n">WSGIContainer</span><span class="p">(</span><span class="n">app</span><span class="p">))</span>
+    <span class="n">http_server</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Tornado server starting on port {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">port</span><span class="p">))</span>
+    <span class="n">result</span><span class="o">=</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">pr1</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1250</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr2</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">1250</span><span class="p">,</span><span class="mi">2500</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr3</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">2500</span><span class="p">,</span><span class="mi">3750</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr4</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">3750</span><span class="p">,</span><span class="mi">5000</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr5</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span><span class="mi">6750</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr6</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">6750</span><span class="p">,</span><span class="mi">7500</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr7</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">7500</span><span class="p">,</span><span class="mi">8750</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr8</span><span class="o">=</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">8750</span><span class="p">,</span><span class="mi">10000</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+    <span class="n">pr1</span><span class="o">.</span><span class="n">start</span><span class="p">();</span><span class="n">pr2</span><span class="o">.</span><span class="n">start</span><span class="p">();</span><span class="n">pr3</span><span class="o">.</span><span class="n">start</span><span class="p">();</span><span class="n">pr4</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+    <span class="n">pr5</span><span class="o">.</span><span class="n">start</span><span class="p">();</span><span class="n">pr6</span><span class="o">.</span><span class="n">start</span><span class="p">();</span><span class="n">pr7</span><span class="o">.</span><span class="n">start</span><span class="p">();</span><span class="n">pr8</span><span class="o">.</span><span class="n">start</span><span class="p">();</span>
+    <span class="n">pr1</span><span class="o">.</span><span class="n">join</span><span class="p">();</span><span class="n">pr2</span><span class="o">.</span><span class="n">join</span><span class="p">();</span><span class="n">pr3</span><span class="o">.</span><span class="n">join</span><span class="p">();</span><span class="n">pr4</span><span class="o">.</span><span class="n">join</span><span class="p">();</span>
+    <span class="n">pr5</span><span class="o">.</span><span class="n">join</span><span class="p">();</span><span class="n">pr6</span><span class="o">.</span><span class="n">join</span><span class="p">();</span><span class="n">pr7</span><span class="o">.</span><span class="n">join</span><span class="p">();</span><span class="n">pr8</span><span class="o">.</span><span class="n">join</span><span class="p">();</span>
+
+    <span class="n">result</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">tmp</span> <span class="o">==</span> <span class="s2">&quot;Stop&quot;</span> <span class="p">:</span> <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+    <span class="n">file_</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;last--result-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">first</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">last</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+        <span class="n">file_</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="n">file_</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">tornado</span><span class="o">.</span><span class="n">ioloop</span><span class="o">.</span><span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+<p><strong>단점으로써는 데이터가 너무 특정한 데이터이다 보니 Caffe 에서 이미지 인식을 똑바로 하지를 못했습니다.</strong></p>
+<p><strong>ex) 블라우스 이미지를 집어 넣으면 -&gt; 방탄조끼를 돌려줬습니다.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6.-&#45796;&#47480;-&#47784;&#45944;-&#54876;&#50857;&#50504;">6. &#45796;&#47480; &#47784;&#45944; &#54876;&#50857;&#50504;<a class="anchor-link" href="#6.-&#45796;&#47480;-&#47784;&#45944;-&#54876;&#50857;&#50504;">&#182;</a></h2><h3 id="&#45796;&#47480;-&#47784;&#45944;-&#54876;&#50857;&#50504;">&#45796;&#47480; &#47784;&#45944; &#54876;&#50857;&#50504;<a class="anchor-link" href="#&#45796;&#47480;-&#47784;&#45944;-&#54876;&#50857;&#50504;">&#182;</a></h3><p>위의 방법 외에도 <code>n-gram</code>을 이용해서 데이터의 크기를 확장해 나가면서도 시도해 보았고, <code>Random-Forest</code>를 이용해서도 모두 시도해 보았지만 결과가 별로 좋지 못하였습니다.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -11756,8 +12016,8 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">konlpy.tag</span> <span class="k">import</span> <span class="n">Twitter</span>
 
-<span class="c1">#train_df = pd.read_pickle(&quot;soma_goods_train.df&quot;)</span>
-<span class="c1">#train_df.shape</span>
+<span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="s2">&quot;soma_goods_train.df&quot;</span><span class="p">)</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">shape</span>
 
 <span class="n">twitter</span> <span class="o">=</span> <span class="n">Twitter</span><span class="p">()</span>
 </pre></div>
@@ -11833,7 +12093,8 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="s2">&quot;soma_goods_train_reg.df&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#train_df=pd.read_pickle(&quot;soma_goods_train_reg.df&quot;)</span>
+
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10000</span><span class="p">):</span>
     <span class="n">useless_word</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;신한카드&quot;</span><span class="p">,</span><span class="s2">&quot;현대카드&quot;</span><span class="p">,</span><span class="s2">&quot;삼성카드&quot;</span><span class="p">,</span><span class="s2">&quot;KB국민카드&quot;</span><span class="p">,</span><span class="s2">&quot;KB카드&quot;</span><span class="p">,</span><span class="s2">&quot;국민카드&quot;</span><span class="p">,</span><span class="s2">&quot;BC카드&quot;</span><span class="p">,</span><span class="s2">&quot;우리카드&quot;</span><span class="p">,</span><span class="s2">&quot;롯데카드&quot;</span><span class="p">,</span><span class="s2">&quot;하나카드&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;구.하나SK&quot;</span><span class="p">,</span>
