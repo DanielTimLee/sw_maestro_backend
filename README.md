@@ -136,7 +136,7 @@ train_df.iloc[i]['name']=r10.sub(" ",train_df.iloc[i]['name'])
 
 ```
 
-###문자열 비교 이용
+### 문자열 비교 이용
 
 ```python
 useless_word = ["신한카드","현대카드","삼성카드","KB국민카드","KB카드","국민카드","BC카드","우리카드","롯데카드","하나카드",
@@ -236,7 +236,7 @@ def start_tornado(app, port=9000):
     print("Tornado server starting on port {}".format(port))
     result=Queue()
     pr1=Process(target=thread, args=(0,1250,result))
-    pr2=Process(target=thread, args=(1250,2500result))
+    pr2=Process(target=thread, args=(1250,2500,result))
     pr3=Process(target=thread, args=(2500,3750,result))
     pr4=Process(target=thread, args=(3750,5000,result))
     pr5=Process(target=thread, args=(5000,6750,result))
@@ -268,11 +268,16 @@ def start_tornado(app, port=9000):
 ```
 
 
-**단점으로써는 데이터가 이미 너무 많이 파편화되어있기 때문에 태깅을 해도 뚜렷하게 구분되지 않든 데이터가 많습니다.**
+**단점으로써는 데이터가 너무 특정한 데이터이다 보니 Caffe 에서 이미지 인식을 똑바로 하지를 못했습니다.**
 
-**ex) '3_' (숫자가 그냥 떨어져 나갔습니다.),'용_' (남성용, 여성용 할 때의 용만 떨어져 나갔습니다)**
+**ex) 블라우스 이미지를 집어 넣으면 -> 방탄조끼를 돌려줬습니다.**
 
 
+## 6. 다른 모델 활용안
+
+### 다른 모델 활용안
+
+위의 방법 외에도 `n-gram`을 이용해서 데이터의 크기를 확장해 나가면서도 시도해 보았고, `Random-Forest`를 이용해서도 모두 시도해 보았지만 결과가 별로 좋지 못하였습니다.
 
 
 
